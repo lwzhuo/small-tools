@@ -3,6 +3,7 @@ import requests
 from pathlib import Path
 import os
 import json
+import time
 
 # 图片来源数据
 pic_src = {
@@ -135,7 +136,7 @@ def handle(pic_url):
 	target_dir_path = base_path + os.sep.join(dir_path)
 
 	check_path(target_dir_path)
-	# pic_url = 'https://himg.bdimg.com/sys/portraitn/item/830ca1ef6ca1ef77a1ef7aa1eff10f'
+	pic_url = 'https://himg.bdimg.com/sys/portraitn/item/830ca1ef6ca1ef77a1ef7aa1eff10f'
 	pic_bin = download_pic(pic_url)
 	save_pic(pic_bin,target_dir_path,file_name)
 
@@ -175,7 +176,12 @@ def get_config():
 
 if __name__ == '__main__':
 	# get_config()
+	start_ts = time.time()
+	print("开始抓取图片")
 	for item in pic_src['sources']:
 		url_dict = item['url']
 		for key in url_dict.keys():
 			handle(url_dict[key])
+			print("==================================================================")
+	end_ts = time.time()
+	print("抓取图片结束,耗时:"+str(end_ts-start_ts))
