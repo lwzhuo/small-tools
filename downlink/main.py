@@ -137,7 +137,7 @@ def handle(pic_url):
 	target_dir_path = base_path + os.sep.join(dir_path)
 
 	check_path(target_dir_path)
-	pic_url = 'https://himg.bdimg.com/sys/portraitn/item/830ca1ef6ca1ef77a1ef7aa1eff10f'
+	# pic_url = 'https://himg.bdimg.com/sys/portraitn/item/830ca1ef6ca1ef77a1ef7aa1eff10f'
 	pic_bin = download_pic(pic_url)
 	save_pic(pic_bin,target_dir_path,file_name)
 
