@@ -123,7 +123,8 @@ pic_src = {
 }
 
 # 图片的基础路径
-base_path = '/Users/zhuo/Desktop/pic_path/'
+# base_path = '/Users/zhuo/Desktop/pic_path/'
+base_path = '/root/pic_path/'
 
 # 处理单张图片整个流程
 def handle(pic_url):
@@ -131,7 +132,7 @@ def handle(pic_url):
 	split_item = pic_url.split('//')[1].split('/')
 	base_url = split_item[0]
 	file_name = split_item[-1]
-	dir_path = split_item[1:-2]
+	dir_path = split_item[1:-1]
 	print(url_dict[key], base_url, dir_path, file_name)
 	target_dir_path = base_path + os.sep.join(dir_path)
 
