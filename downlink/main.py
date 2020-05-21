@@ -1,5 +1,9 @@
 # downlink图片欲加载
 import requests
+from pathlib import Path
+import os
+import json
+
 # 图片来源数据
 pic_src = {
 	"sources": [
@@ -117,28 +121,61 @@ pic_src = {
 	]
 }
 
+# 图片的基础路径
+base_path = '/Users/zhuo/Desktop/pic_path/'
+
+# 处理单张图片整个流程
+def handle(pic_url):
+	# 分割url
+	split_item = pic_url.split('//')[1].split('/')
+	base_url = split_item[0]
+	file_name = split_item[-1]
+	dir_path = split_item[1:-2]
+	print(url_dict[key], base_url, dir_path, file_name)
+	target_dir_path = base_path + os.sep.join(dir_path)
+
+	check_path(target_dir_path)
+	# pic_url = 'https://himg.bdimg.com/sys/portraitn/item/830ca1ef6ca1ef77a1ef7aa1eff10f'
+	pic_bin = download_pic(pic_url)
+	save_pic(pic_bin,target_dir_path,file_name)
+
 # 拉取图片
 def download_pic(pic_url):
-	pass
+	print('开始下载图片:'+pic_url)
+	resp = requests.get(pic_url)
+	print('图片下载完毕')
+	return resp.content
+
+def save_pic(img_bin,dir_path,file_name):
+	print("开始保存图片:"+file_name)
+	f = open(dir_path+os.sep+file_name,'wb')
+	f.write(img_bin)
+	f.close()
+	print("保存图片["+file_name+"]完毕")
 
 # 检查路径
 def check_path(path):
-	pass
+	pic_path = Path(path)
+	if not pic_path.exists(): # 路径不存在或者路径对应的不是文件夹 创建文件夹
+		os.makedirs(path)
+		print("创建路径:" + path)
+	else:
+		if not pic_path.is_dir():
+			raise Exception("目标路径不是文件夹")
+		else:
+			print("路径检查完毕:"+path)
 
-# 创建文件夹
-def make_dir(path):
-	pass
 
-# 拉取配置
+# 在线拉取配置
 def get_config():
-	pass
+	resp = requests.get("https://downlinkapp.com/sources.json")
+	content = resp.text
+	content = json.loads(content)
+	return content
 
 if __name__ == '__main__':
+	# get_config()
 	for item in pic_src['sources']:
 		url_dict = item['url']
 		for key in url_dict.keys():
-			split_item = url_dict[key].split('//')[1].split('/')
-			base_url = split_item[0]
-			file_name = split_item[-1]
-			dir_path = split_item[1:-2]
-			print(url_dict[key],base_url,dir_path,file_name)
+			handle(url_dict[key])
